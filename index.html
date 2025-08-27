@@ -1,150 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Simulasi Black Body Radiation</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Presentasi Interaktif: Radiasi Benda Hitam</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-  <h1>Simulasi </h1>
+  <header>
+    <h1>Presentasi Interaktif: Radiasi Benda Hitam</h1>
+    <div class="nav">
+      <button id="prevBtn" class="btn">◀ Sebelumnya</button>
+      <button id="nextBtn" class="btn btn-accent">Berikutnya ▶</button>
+    </div>
+  </header>
 
-  <div class="controls">
-    <label for="tempSlider">Suhu (K): </label>
-    <input type="range" id="tempSlider" min="1000" max="10000" value="5000" step="100">
-    <span id="tempValue">5000</span> K
-    <button id="resetBtn">Reset</button>
+  <div class="container">
+    <!-- SLIDE 1: Pendahuluan -->
+    <section class="slide active" id="slide-1">
+      <h2>1. Apa itu Benda Hitam?</h2>
+      <div class="grid">
+        <div class="card">
+          <p><b>Benda hitam</b> adalah model ideal yang <i>menyerap</i> semua radiasi yang datang dan
+            <i>memancarkan</i> radiasi hanya bergantung pada suhunya. Warna “terlihat” akan
+            berubah dengan suhu: makin panas → puncak spektrum ke panjang gelombang lebih pendek (kebiruan).</p>
+          <ul>
+            <li>Contoh pendekatan: rongga dengan lubang kecil (oven).</li>
+            <li>Spektrum pancaran mengikuti <b>Hukum Planck</b>.</li>
+            <li>Posisi puncak λ<sub>max</sub> mengikuti <b>Hukum Perpindahan Wien</b>.</li>
+          </ul>
+          <p class="keyhint">Tips: pakai tombol <span class="kbd">←</span> <span class="kbd">→</span> atau tombol di atas untuk pindah slide.</p>
+        </div>
+        <div class="card">
+          <div class="formula">
+            <p><b>Hukum Planck:</b></p>
+            <p> \( I(\lambda, T) = \frac{2 h c^2}{\lambda^5 \left(e^{\frac{h c}{\lambda k T}} - 1\right)} \) </p>
+            <p><b>Hukum Perpindahan Wien:</b>
+              \( \lambda_{\text{max}} = \frac{b}{T} \), dengan \( b \approx 2.898\times 10^{-3}\,\mathrm{m\cdot K} \).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Rumus & Intuisi -->
+    <section class="slide" id="slide-2">
+      <h2>2. Intuisi Hukum Planck & Wien</h2>
+      <div class="grid">
+        <div class="card">
+          <p><b>Intuisi:</b> untuk suhu tertentu, distribusi energi terhadap panjang gelombang membentuk kurva.
+            <i>Puncaknya</i> adalah λ<sub>max</sub>. Saat <b>T naik</b>, kurva “naik” dan puncak “geser ke kiri”
+            (ke λ lebih kecil = kebiruan).</p>
+          <ul>
+            <li>Area di bawah kurva ≈ total energi (bertambah tajam dengan T).</li>
+            <li>Sisi pendek gelombang “jatuh” lebih cepat (ekspansial).</li>
+          </ul>
+          <div class="mini">Di slide berikutnya kita uji dengan simulasi real-time.</div>
+        </div>
+        <div class="card">
+          <p><b>Keterangan simbol:</b></p>
+          <ul class="mini">
+            <li>h: konstanta Planck &nbsp; c: kecepatan cahaya &nbsp; k: konstanta Boltzmann</li>
+            <li>T: suhu (K) &nbsp; λ: panjang gelombang (m)</li>
+          </ul>
+          <p class="mini">Catatan: warna terlihat hanya ≈380–780 nm; di luar itu tetap ada energi (IR/UV) tapi tidak tampak mata.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: SIMULASI -->
+    <section class="slide" id="slide-3">
+      <h2>3. Simulasi: Spektrum & Benda Hitam Dipanaskan</h2>
+
+      <div class="card controls" style="margin-bottom:12px">
+        <label for="tempSlider">Suhu (K):</label>
+        <input type="range" id="tempSlider" min="1000" max="10000" value="5000" step="100" />
+        <span id="tempValue">5000</span> K
+        <button id="playBtn" class="btn">▶ Play</button>
+        <button id="resetBtn" class="btn">Reset</button>
+        <div class="mini">λ<sub>max</sub>: <span id="lambdaMax">0</span> nm &nbsp; | &nbsp;
+          Total Intensitas (relatif): <span id="totalIntensity">0</span></div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <canvas id="spectrumCanvas" width="900" height="480"></canvas>
+          <div class="row" style="margin-top:10px">
+            <div id="colorBox" title="Spektrum sekitar λmax"></div>
+            <span class="mini">Gradien ±50 nm di sekitar λ<sub>max</sub> (visualisasi dominan warna).</span>
+          </div>
+        </div>
+        <div class="card">
+          <canvas id="bbCanvas" width="420" height="420"></canvas>
+          <div class="mini">Visual “benda hitam” memancarkan cahaya sesuai suhu (glow & animasi api).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Ringkasan -->
+    <section class="slide" id="slide-4">
+      <h2>4. Ringkasan & Insight</h2>
+      <div class="grid">
+        <div class="card">
+          <ul>
+            <li><b>Hukum Planck</b> memetakan distribusi intensitas terhadap λ.</li>
+            <li><b>Wien</b>: λ<sub>max</sub> berbanding terbalik dengan T → makin panas, makin kebiru-biruan.</li>
+            <li>Total energi melonjak kuat dengan T (di luar jangkauan tampak pun besar).</li>
+          </ul>
+          <p class="mini">Eksperimen kecil: bandingkan T=3000K, 5000K, 9000K. Amati pergeseran puncak & perubahan warna.</p>
+        </div>
+        <div class="card">
+          <div class="formula">
+            <p><b>Rumus yang digunakan di simulasi ini:</b></p>
+            <p>\( I(\lambda, T) = \frac{2 h c^2}{\lambda^5 \left(e^{\frac{h c}{\lambda k T}} - 1\right)} \)</p>
+            <p>\( \lambda_{\text{max}} = \frac{b}{T} \), &nbsp; \( b \approx 2.898\times 10^{-3}\,\mathrm{m\cdot K} \)</p>
+          </div>
+          <p class="credit">Dibuat oleh kamu ✨ dengan bantuan GPT-5 (OpenAI).</p>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <canvas id="spectrumCanvas" width="900" height="500"></canvas>
+  <script src="script.js"></script>
 
-  <div id="colorBox"></div>
-  <div id="infoBox">λmax: <span id="lambdaMax">0</span> nm | Total Intensitas: <span id="totalIntensity">0</span></div>
-
-  <div id="formula">
-    <h3>Rumus Fisika</h3>
-    <p><b>Hukum Planck:</b></p>
-    <p>
-      \( I(\lambda, T) = \frac{2 h c^2}{\lambda^5 \left(e^{\frac{h c}{\lambda k T}} - 1\right)} \)
-    </p>
-    <p>
-      dengan:  
-      \(h\) = konstanta Planck,  
-      \(c\) = kecepatan cahaya,  
-      \(k\) = konstanta Boltzmann,  
-      \(T\) = suhu absolut (Kelvin),  
-      \(\lambda\) = panjang gelombang.
-    </p>
-    <p><b>Hukum Perpindahan Wien:</b></p>
-    <p>
-      \( \lambda_{\text{max}} = \frac{b}{T} \) &nbsp;&nbsp; dengan \( b \approx 2.9 \times 10^{-3} \, \text{m·K} \)
-    </p>
-  </div>
-
-  <div class="credit">
-    Dibuat dengan ❤️ oleh kamu, dengan bantuan GPT-5 (OpenAI).
-  </div>
-
-  <script>
-    const h = 6.626e-34;
-    const c = 3e8;
-    const k = 1.381e-23;
-    const b_wien = 2.898e-3;
-
-    const canvas = document.getElementById("spectrumCanvas");
-    const ctx = canvas.getContext("2d");
-    const slider = document.getElementById("tempSlider");
-    const tempValue = document.getElementById("tempValue");
-    const lambdaMaxDisplay = document.getElementById("lambdaMax");
-    const totalIntensityDisplay = document.getElementById("totalIntensity");
-    const colorBox = document.getElementById("colorBox");
-    const resetBtn = document.getElementById("resetBtn");
-
-    function planckLaw(wavelength, T) {
-      const a = 2 * h * c * c;
-      const b = (h * c) / (wavelength * k * T);
-      return a / (Math.pow(wavelength, 5) * (Math.exp(b) - 1));
-    }
-
-    function wavelengthToRGB(wavelength) {
-      let R=0,G=0,B=0; let wl = wavelength*1e9;
-      if(wl>=380&&wl<440){R=-(wl-440)/(440-380);G=0;B=1;}
-      else if(wl>=440&&wl<490){R=0;G=(wl-440)/(490-440);B=1;}
-      else if(wl>=490&&wl<510){R=0;G=1;B=-(wl-510)/(510-490);}
-      else if(wl>=510&&wl<580){R=(wl-510)/(580-510);G=1;B=0;}
-      else if(wl>=580&&wl<645){R=1;G=-(wl-645)/(645-580);B=0;}
-      else if(wl>=645&&wl<=780){R=1;G=0;B=0;}
-      const gamma=0.8; R=Math.pow(R,gamma);G=Math.pow(G,gamma);B=Math.pow(B,gamma);
-      return `rgb(${Math.round(R*255)},${Math.round(G*255)},${Math.round(B*255)})`;
-    }
-
-    function drawSpectrum(T){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      const wlMin=380e-9; const wlMax=780e-9; const steps=1000;
-      let intensities=[], wavelengths=[];
-      let totalIntensity=0;
-
-      for(let i=0;i<=steps;i++){
-        let wl=wlMin + (i/steps)*(wlMax-wlMin);
-        let I=planckLaw(wl,T);
-        wavelengths.push(wl); intensities.push(I); totalIntensity+=I;
-      }
-
-      const Imax=Math.max(...intensities);
-      const scaleX=canvas.width/steps; const scaleY=(canvas.height-60)/Imax;
-
-      // background gradien
-      let gradient=ctx.createLinearGradient(0,0,canvas.width,0);
-      for(let i=0;i<=steps;i++){gradient.addColorStop(i/steps,wavelengthToRGB(wavelengths[i]));}
-      ctx.fillStyle=gradient; ctx.fillRect(0,0,canvas.width,canvas.height);
-
-      // kurva
-      ctx.beginPath();
-      for(let i=0;i<=steps;i++){
-        let x=i*scaleX; let y=canvas.height-intensities[i]*scaleY-40;
-        if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-      }
-      ctx.strokeStyle="black"; ctx.lineWidth=2; ctx.stroke();
-
-      // sumbu X
-      ctx.beginPath(); ctx.moveTo(0,canvas.height-40); ctx.lineTo(canvas.width,canvas.height-40); ctx.strokeStyle="#333"; ctx.stroke();
-      ctx.fillStyle="black"; ctx.font="14px Arial";
-      ctx.fillText("380 nm",0,canvas.height-20); ctx.fillText("780 nm",canvas.width-60,canvas.height-20); ctx.fillText("Panjang Gelombang (nm)",canvas.width/2-80,canvas.height-5);
-
-      // sumbu Y
-      ctx.save(); ctx.translate(15,canvas.height/2); ctx.rotate(-Math.PI/2); ctx.fillText("Intensitas Relatif",0,0); ctx.restore();
-
-      // λmax
-      let lambdaMax = b_wien/T;
-      if(lambdaMax>=wlMin && lambdaMax<=wlMax){
-        let xPeak=((lambdaMax-wlMin)/(wlMax-wlMin))*canvas.width;
-        ctx.beginPath(); ctx.moveTo(xPeak,canvas.height-40); ctx.lineTo(xPeak,0);
-        ctx.strokeStyle="red"; ctx.setLineDash([5,5]); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle="red"; ctx.fillText(`${Math.round(lambdaMax*1e9)} nm`,xPeak-20,20);
-      }
-
-      // update infoBox
-      lambdaMaxDisplay.textContent=Math.round(lambdaMax*1e9);
-      totalIntensityDisplay.textContent=Math.round(totalIntensity/1e13);
-
-      // gradien ±50nm untuk colorBox
-      let gradSteps=100;
-      let gradColors=[];
-      for(let i=-50;i<=50;i++){
-        let wlGrad=lambdaMax*1e9+i;
-        if(wlGrad>=380 && wlGrad<=780){
-          gradColors.push(wavelengthToRGB(wlGrad*1e-9));
-        }
-      }
-      colorBox.style.background = `linear-gradient(to right, ${gradColors.join(',')})`;
-    }
-
-    slider.addEventListener("input",()=>{const T=parseInt(slider.value); tempValue.textContent=T; drawSpectrum(T);});
-    resetBtn.addEventListener("click",()=>{slider.value=5000; slider.dispatchEvent(new Event('input'));});
-    drawSpectrum(parseInt(slider.value));
-  </script>
+  <!-- MathJax (untuk rumus) -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>
